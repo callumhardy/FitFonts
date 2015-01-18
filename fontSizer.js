@@ -76,7 +76,7 @@ if (!Object.keys) {
 
 		minFontSize: 1,
 
-		averageLines: true,
+		averageLines: false,
 
 		debug: false,
 
