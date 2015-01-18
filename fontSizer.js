@@ -76,6 +76,8 @@ if (!Object.keys) {
 
 		minFontSize: 1,
 
+		averageLines: true,
+
 		debug: false,
 
 		/**
@@ -158,6 +160,8 @@ if (!Object.keys) {
 
 		/**
 		 * @param [Object] config "User configuration options"
+		 *
+		 * @return [Object]	"The TypeSizer Object"
 		 */
 		init: function( config, elements ) {
 
@@ -175,8 +179,15 @@ if (!Object.keys) {
 			//	Setup the bind events
 			self.bindEvents();
 
+			return self;
+
 		},
 
+		/**
+		 * This method runs through select while loops and forces the text to fit inside a container element
+		 * 
+		 * @return [Object]	"The TypeSizer Object"
+		 */
 		typeResize: function() {
 
 			var self = this,
@@ -235,6 +246,9 @@ if (!Object.keys) {
 				count++;
 
 			}
+
+			//	Reset the inline width of the text before we go about sizing it
+			$text.css('width','');
 
 			//	Setting up the initial variables to test the text size with
 			updateVars();
@@ -300,6 +314,31 @@ if (!Object.keys) {
 
 			}
 
+			//	Store the current amount of lines that the text spans
+			var textLines = textCurrentLines;
+
+			//	Set an inline width on the text
+			$text.css('width',$container.width());
+
+			//	Here we are reducing the width of the text until the lines are average in length
+			if( config.averageLines ) {
+
+				count = 1;
+
+				action = 'Averaging';
+
+				while( textLines == textCurrentLines && count < 9999 ) {
+
+					$text.css('width','-=1');
+
+					updateVars();
+
+				}
+
+				$text.css('width','+=1');
+
+			}
+
 			//	Centering the text
 			if( config.center ) {
 
@@ -315,6 +354,8 @@ if (!Object.keys) {
 			
 			//	Callback: after
 			config.after();
+
+			return self;
 
 		},
 
